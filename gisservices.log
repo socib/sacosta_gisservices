@@ -1,0 +1,118 @@
+2013-09-20 14:18:40,120 ERROR	: Exception on /geosocib/api/v1.0/sacosta/2.9013894,39.4610927,3.6264871,39.6051384,3.1705545,39.1465493 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:18:42,937 ERROR	: Exception on /geosocib/api/v1.0/sacosta/3.0002664,39.7024115,3.7253640,39.8459557,3.2694314,39.3889578 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:19:03,079 ERROR	: Exception on /geosocib/api/v1.0/sacosta/3.0002664,39.7024115,3.7253640,39.8459557,3.2694314,39.3889578 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:19:05,676 ERROR	: Exception on /geosocib/api/v1.0/sacosta/3.0002664,39.7024115,3.7253640,39.8459557,3.2694314,39.3889578 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:19:10,709 ERROR	: Exception on /geosocib/api/v1.0/sacosta/3.0002664,39.7024115,3.7253640,39.8459557,3.2694314,39.3889578 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:19:24,013 ERROR	: Exception on /geosocib/api/v1.0/sacosta/3.0002664,39.7024115,3.7253640,39.8459557,3.2694314,39.3889578 [GET]
+Traceback (most recent call last):
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/bfrontera/code/python/venv/flask/local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/bfrontera/code/gisservices/decorators/crossdomain.py", line 30, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/home/bfrontera/code/gisservices/services/views.py", line 67, in get_sacosta_polygon
+    return get_result_sacosta(region)
+  File "/home/bfrontera/code/gisservices/services/views.py", line 72, in get_result_sacosta
+    conn = psycopg2.connect(app.config['DATABASE_URI'])
+AttributeError: 'Blueprint' object has no attribute 'config'
+2013-09-20 14:20:46,220 INFO	: Logger started
+2013-09-20 14:20:46,526 INFO	: Logger started
+2013-09-20 14:22:00,441 INFO	: Logger started
+2013-09-20 14:22:21,868 INFO	: Logger started
