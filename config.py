@@ -18,14 +18,14 @@ class Config(object):
 
     # DATABASE CONFIGURATION
     # Defined at local_config.py (not in git repository. local_config is called by GISSERVICES_CONFIG envvar)
-    DATABASE_URI = ""
+    DATABASE_URI = "dbname=DBNAME host=HOST port=PORT user=USER password=PASSWORD"
 
     CSRF_ENABLED = True
     SECRET_KEY = "secret"  # import os; os.urandom(24)
 
     # LOGGING
-    LOGGER_NAME = "log/%s_log" % project_name
-    LOG_FILENAME = "log/%s.log" % project_name
+    LOGGER_NAME = "/tmp/%s_log" % project_name
+    LOG_FILENAME = "/tmp/%s.log" % project_name
     LOG_LEVEL = logging.INFO
     LOG_FORMAT = "%(asctime)s %(levelname)s\t: %(message)s" # used by logging.Formatter
 
