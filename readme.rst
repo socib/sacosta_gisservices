@@ -9,12 +9,17 @@ Installation
 
     Follow `this instructions <http://virtualenvwrapper.readthedocs.org/en/latest/command_ref.html>`_  to create a new environment and activate it.
 
-- Download code::
+- Download code to /var/www/gisservices (or make a symbolic link there)::
 
     git clone gituser@portal.socib.es:repositories/gisservices
 
-- Local config:
+- Local config::
+
     Create file local_config.py and overwrite sensible variables that does not appear in git repository (as DATABASE_URI)
+
+- Modify wsgi.py::
+
+    Modify activate_this variable, in order to set the path of the virtualenv
 
 - Install python dependencies::
 
