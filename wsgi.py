@@ -1,4 +1,5 @@
-activate_this = '/home/bfrontera/code/python/venv/flask/bin/activate_this.py'
+#activate_this = '/home/bfrontera/code/python/venv/flask/bin/activate_this.py'
+activate_this = '/home/webuser/virtualenv/gisservices-test/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 import sys
