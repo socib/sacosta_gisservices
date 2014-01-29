@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<?python
+    from os.path import exists
+?>
+<document xmlns:py="http://genshi.edgewall.org/">
+    <template pageSize="(595, 842)" leftMargin="72" showBoundary="0">
+        <pageTemplate id="main">
+            <frame id="first" x1="1in" y1="1in" width="6.27in" height="9.69in"/>
+        </pageTemplate>
+    </template>
+    <stylesheet>
+        <paraStyle name="normal" fontName="Helvetica" fontSize="10" leading="12" spaceBefore="6"/>
+        <blockTableStyle id="mynicetable" spaceBefore="12">
+            <lineStyle kind="OUTLINE" colorName="black" thickness="0.5"/>
+            <blockFont name="Times-Bold" size="6" leading="7" start="0,0" stop="-1,0"/>
+            <blockBottomPadding length="1"/>
+            <blockBackground colorName="0xD0D0D0" start="0,0" stop="-1,0"/>
+            <lineStyle kind="LINEBELOW" colorName="black" start="0,0" stop="-1,0" thickness="0.5"/>
+            <!--body section-->
+            <blockFont name="Times-Roman" size="6" leading="7" start="0,1" stop="-1,-1"/>
+            <blockTopPadding length="1" start="0,1" stop="-1,-1"/>
+            <blockBackground colorsByRow="0xD0FFD0;None" start="0,1" stop="-1,-1"/>
+            <blockAlignment value="right" start="1,1" stop="-1,-1"/>
+
+            <!-- closing the table when restarting it on next page -->
+            <lineStyle kind="LINEBELOW" colorName="black" start="0,splitlast" stop="-1,splitlast" thickness="0.5"/>
+        </blockTableStyle>
+    </stylesheet>
+    <story>
+        <h1>$title</h1>
+
+        <illustration align="CENTER" height="${image.size[1] + 10}" width="451" borderStrokeWidth="1">
+            <image file="${image_filename}" width="${image.size[0]}" height="${image.size[1]}" showBoundary="yes" preserveAspectRatio="yes" x="${(451 - image.size[0])/2}" y="5" />
+        </illustration>
+
+        <para style="normal"></para>
+        <para style="normal">Now we try to place it with the art box.  The blue should leak out horribly to left and below, but the red circle should
+end up elliptical within the box.  (In real life, the art box defines the 'area of interest' and there would be no stuff outside it).  This isn't working yet.  Also,
+we get an extraneous boundary box from drawPdfImage appearing at top right - shifted the wrong way.</para>
+
+        <imageFigure imageName="resources/mapa.png" imageWidth="500" imageHeight="500" showBoundary="yes" caption="Align Center" captionSize="11" captionColor="red" preserveAspectRatio="yes" pdfBoxType="MediaBox" align="CENTER"/>
+
+    </story>
+</document>

@@ -49,3 +49,11 @@ Installation
 
     </VirtualHost>
 
+
+Development deployment
+----------------------
+    workon name_of_virtualenv
+    export GISSERVICES_CONFIG='local_config.py'
+    python manage.py runserver
+
+    Test: http://localhost:5000/api/v1.0/sacosta/3.1297850,39.8819925,3.0734801,39.7501388,3.4154295,39.6973265,3.4415220,39.8029106,3.1215452,39.9504564,3.1284117,39.9293979

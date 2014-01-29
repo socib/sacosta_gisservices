@@ -8,3 +8,18 @@ distribute==0.6.34
 itsdangerous==0.23
 psycopg2==2.5.1
 wsgiref==0.1.2
+# Map and image
+PIL==1.1.7
+OWSLib==0.8.3
+pyproj==1.9.3
+
+# PDF Report
+reportlab==2.7
+pyjon.reports==0.6
+z3c.rml==2.5.0
+Genshi==0.7
+PyPDF2==1.20
+Pygments==1.6
+lxml==3.3.0
+preppy==1.0.1
+pyPdf==1.13
