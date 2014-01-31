@@ -38,24 +38,30 @@ def coordinates_to_image_position(bbox, dimensions):
 
     long_x = bbox[2] - bbox[0]
     long_y = bbox[3] - bbox[1]
+    scale_x = dimensions[0]/long_x
+    scale_y = -dimensions[1]/long_y
+    offset_x = 0
+    offset_y = dimensions[1]
 
     def fun(x, y):
         diff_x = x - bbox[0]
         diff_y = y - bbox[1]
-        new_x = diff_x*dimensions[0]/long_x
-        new_y = dimensions[1] - diff_y*dimensions[1]/long_y
+        new_x = diff_x*scale_x + offset_x
+        new_y = diff_y*scale_y + offset_y
         return (new_x, new_y)
 
     return fun
 
 
-def generate_sacosta_map(bbox, max_size=(500,500)):
+def generate_map_tile(layers, bbox, max_size=(500,500)):
     """ Generate a image with sacosta layers and with a selected polygon
 
+    :param layers: layer list, ordered from bottom to top
     :param polygon_vertices: list
     :param max_size: desired dimensions for the image. These dimensions are adjusted to preserve map proportion
     :returns: PIL image
     """
+
     # calculate image dimensions
     dx = distance(bbox[0], bbox[1], bbox[2], bbox[1])
     dy = distance(bbox[0], bbox[1], bbox[0], bbox[3])
@@ -74,48 +80,25 @@ def generate_sacosta_map(bbox, max_size=(500,500)):
 
     # load images from WMS
     serverurl ='http://gis.socib.es/geoserver/ows'
-    wms = WebMapService( serverurl, version='1.1.1')
+    wms = WebMapService(serverurl, version='1.1.1')
     srs = 'EPSG:4326'
 
-    #let's get the images...
-    img_sacosta = wms.getmap( layers=['sa:bal_sa_costa_2012'],
-                      srs=srs,
-                      bbox=bbox,
-                      size=image_dimensions,
-                      format='image/png',
-                      transparent=True
-    )
-    img_municip = wms.getmap( layers=['ge:bal_municipios'],
-                      srs=srs,
-                      bbox=bbox,
-                      size=image_dimensions,
-                      format='image/png',
-                      transparent=True
-    )
-    img_batimetria = wms.getmap( layers=['batimetria'],
-                      srs=srs,
-                      bbox=bbox,
-                      size=image_dimensions,
-                      format='image/png',
-                      transparent=True
-    )
+    map_img = wms.getmap( layers=layers,
+                          srs=srs,
+                          bbox=bbox,
+                          size=image_dimensions,
+                          format='image/png',
+                          transparent=True)
 
-    #combine images
-    background = Image.open(cStringIO.StringIO(urllib.urlopen(img_municip.url).read()))
-    layer = Image.open(cStringIO.StringIO(urllib.urlopen(img_batimetria.url).read()))
-    background.paste(layer, (0, 0), layer)
-    layer = Image.open(cStringIO.StringIO(urllib.urlopen(img_sacosta.url).read()))
-    background.paste(layer, (0, 0), layer)
-
-    return background
+    #generate image
+    image = Image.open(cStringIO.StringIO(map_img.read()))
+    return image
 
 
+def generate_map_with_selected_polygon(layers, polygon_vertices, max_size=(500,500), bbox_padding=0.01):
+    """ Generate a map image with given layers and a selected polygon
 
-
-
-def generate_sacosta_map_with_selected_polygon(polygon_vertices, max_size=(500,500), bbox_padding=0.01):
-    """ Generate a image with sacosta layers and with a selected polygon
-
+    :param layers: layer list, ordered from bottom to top
     :param polygon_vertices: list
     :param max_size: desired dimensions for the image. These dimensions are adjusted to preserve map proportion
     :param bbox_padding: extra space that the background image will take from polygon bbox
@@ -127,7 +110,7 @@ def generate_sacosta_map_with_selected_polygon(polygon_vertices, max_size=(500,5
             max([float(v[0]) for v in polygon_vertices]) + bbox_padding,
             max([float(v[1]) for v in polygon_vertices]) + bbox_padding)
 
-    background = generate_sacosta_map(bbox, max_size)
+    background = generate_map_tile(layers, bbox, max_size)
 
     # draw polygon
     conv = coordinates_to_image_position(bbox, background.size)
@@ -140,3 +123,34 @@ def generate_sacosta_map_with_selected_polygon(polygon_vertices, max_size=(500,5
     background.paste(poly, mask=poly)
 
     return background
+
+
+
+def get_layer_legend(layer, max_size=(400,200)):
+    """ Return first legend of a layer
+
+    :param layer: layer
+    :returns: PIL image
+    """
+    serverurl ='http://gis.socib.es/geoserver/ows'
+    wms = WebMapService( serverurl, version='1.1.1')
+    layer_style = wms[layer].styles.keys()[0]
+    legend_url = wms[layer].styles[layer_style]['legend']
+    legend = Image.open(cStringIO.StringIO(urllib.urlopen(legend_url).read()))
+
+    # crop legend
+    if legend.size[0] > max_size[0] or legend.size[1] > max_size[1]:
+        ratio = legend.size[0]/legend.size[1]
+        desired_ratio = max_size[0]/max_size[1]
+
+        if ratio > desired_ratio:
+            new_sizex = max_size[0]
+            new_sizey = int(round(new_sizex/ratio))
+        else:
+            new_sizey = max_size[1]
+            new_sizex = int(round(new_sizey*ratio))
+
+        # legend = legend.resize((new_sizex, new_sizey), Image.ANTIALIAS)
+        legend = legend.crop((0, 0, new_sizex, new_sizey))
+
+    return legend

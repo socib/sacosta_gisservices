@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<?python
+    from os.path import exists
+?>
+<document xmlns:py="http://genshi.edgewall.org/">
+  <template pageSize="(595.0,842.0)" >
+    <pageTemplate id="first">
+      <pageGraphics>
+        <fill color="#00ffff" />
+        <setFont name="Helvetica" size="12"/>
+        <image x="0" y="771" file="resources/header.jpg" width="595" height="71"/>
+        <image x="62" y="40" file="resources/footer.jpg" width="471" height="14" />
+        <drawCentredString x="520" y="20">-<pageNumber/>-</drawCentredString>
+      </pageGraphics>
+      <frame id="first" x1="62.0" y1="60.0" width="471" height="700"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <initialize>
+      <paraStyle name="all" alignment="justify" />
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="28.0" leading="44" spaceBefore="0.0" spaceAfter="2.0" textColor="#32bfda"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="22.0" leading="27" spaceBefore="0.0" spaceAfter="22.0" textColor="#32bfda"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="18.0" leading="22" spaceBefore="12.0" spaceAfter="4.0" textColor="#32bfda"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="12.0" leading="15" spaceBefore="2.0" spaceAfter="0.0" textColor="#32bfda" />
+    <paraStyle name="P5" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="12.0"/>
+    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="24.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="3.0" spaceAfter="0.0"/>
+    <paraStyle name="P11" rightIndent="-26.0" leftIndent="-26.0" fontName="Helvetica" fontSize="7.0" leading="9" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P12" rightIndent="18.0" leftIndent="0.0" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Standard" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0" alignment="justify" />
+    <paraStyle name="Header" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica-Oblique" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="font11" fontName="Helvetica" fontSize="11.0" />
+    <paraStyle name="font18" fontName="Helvetica" fontSize="18.0" />
+    <paraStyle name="Index" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0"/>
+  </stylesheet>
+  <story>
+    <para style="P1">Sa Costa<br/>
+        Figuras de protección ambiental</para>
+
+    <illustration align="CENTER" height="${map.size[1] + 10}" width="451" borderStrokeWidth="1">
+        <image file="${map_filename}" width="${map.size[0]}" height="${map.size[1]}" showBoundary="yes" preserveAspectRatio="yes" x="${(451 - map.size[0])/2}" y="5" />
+    </illustration>
+    <illustration align="CENTER" height="${legend.size[1] + 10}" width="451" >
+        <image file="${legend_filename}" width="${legend.size[0]}" height="${legend.size[1]}" showBoundary="no" preserveAspectRatio="yes" x="${(451 - legend.size[0])/2}" y="5" />
+    </illustration>
+
+    <condPageBreak height="200" py:if="len(data) > 0" />
+    <para style="P2" py:if="len(data) > 0">Listado de protecciones</para>
+
+    <indent left="10" py:for="type_proteccion in data">
+        <condPageBreak height="150"/>
+        <para style="P3">${type_proteccion}</para>
+        <indent left="20" py:for="ambito in data[type_proteccion]['ambitos']">
+            <condPageBreak height="100"/>
+            <para style="P4">${ambito.capitalize()}</para>
+            <indent left="20" py:for="toponimia in data[type_proteccion]['ambitos'][ambito]['toponimia']">
+                <para>${toponimia.decode('utf-8')}</para>
+            </indent>
+        </indent>
+    </indent>
+
+    <spacer length="1cm"/>
+  </story>
+</document>

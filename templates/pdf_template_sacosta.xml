@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<?python
+    from os.path import exists
+    from services.utils import get_esicostes_description, get_esicostes_color, format_longitud
+?>
+<document xmlns:py="http://genshi.edgewall.org/">
+  <template pageSize="(595.0,842.0)" >
+    <pageTemplate id="first">
+      <pageGraphics>
+        <fill color="#00ffff" />
+        <setFont name="Helvetica" size="12"/>
+        <image x="0" y="771" file="resources/header.jpg" width="595" height="71"/>
+        <image x="62" y="40" file="resources/footer.jpg" width="471" height="14" />
+        <drawCentredString x="520" y="20">-<pageNumber/>-</drawCentredString>
+      </pageGraphics>
+      <frame id="first" x1="62.0" y1="60.0" width="471" height="700"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <initialize>
+      <paraStyle name="all" alignment="justify" />
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="24.0" leading="44" spaceBefore="0.0" spaceAfter="2.0" textColor="#32bfda"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="22.0" leading="27" spaceBefore="0.0" spaceAfter="22.0" textColor="#32bfda"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="18.0" leading="22" spaceBefore="0.0" spaceAfter="12.0" textColor="#32bfda"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="0.0" textColor="#32bfda" />
+    <paraStyle name="P5" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="12.0"/>
+    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="24.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="3.0" spaceAfter="0.0"/>
+    <paraStyle name="P11" rightIndent="-26.0" leftIndent="-26.0" fontName="Helvetica" fontSize="7.0" leading="9" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P12" rightIndent="18.0" leftIndent="0.0" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Standard" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0" alignment="justify" />
+    <paraStyle name="Header" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica-Oblique" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="font11" fontName="Helvetica" fontSize="11.0" />
+    <paraStyle name="font18" fontName="Helvetica" fontSize="18.0" />
+    <paraStyle name="Index" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="10.0"/>
+    <blockTableStyle id="datetable" spaceBefore="12" spaceAfter="30" >
+        <lineStyle kind="OUTLINE" colorName="#00ffff" thickness="0.5"/>
+        <blockFont name="Helvetica-Bold" size="12.0" leading="20" start="0,0" stop="-1,0"/>
+        <blockBottomPadding length="1"/>
+        <blockBackground colorName="0x00ffff" start="0,0" stop="-1,0"/>
+        <lineStyle kind="LINEBELOW" colorName="#00ffff" start="0,0" stop="-1,0" thickness="0.5"/>
+        <!--body section-->
+        <blockFont name="Helvetica" size="11" leading="17" start="0,1" stop="-1,-1"/>
+        <blockTopPadding length="1" start="0,1" stop="-1,-1"/>
+        <blockBackground colorsByRow="0xcaf0f4;None" start="0,1" stop="-1,-1"/>
+        <blockAlignment value="center" start="0,0" stop="1,-1"/>
+        <blockAlignment value="right" start="-1,0" stop="-1,-1"/>
+        <blockValign value="MIDDLE" start="0,0" stop="-1,-1"/>
+        <blockLeftPadding length="7" start="0,1" stop="0,-1"/>
+        <blockBottomPadding length="5" start="0,0" stop="-1,-1"/>
+        <blockTopPadding length="5" start="0,0" stop="-1,-1"/>
+        <!-- closing the table when restarting it on next page -->
+        <lineStyle kind="LINEBELOW" colorName="#00ffff" start="0,splitlast" stop="-1,splitlast" thickness="0.5"/>
+    </blockTableStyle>
+  </stylesheet>
+  <story>
+    <para style="P1">Sa Costa<br/>Sensibilidad ambiental por tipo de costa</para
+>    <illustration align="CENTER" height="${map.size[1] + 10}" width="451" borderStrokeWidth="1">
+        <image file="${map_filename}" width="${map.size[0]}" height="${map.size[1]}" showBoundary="yes" preserveAspectRatio="yes" x="${(451 - map.size[0])/2}" y="5" />
+    </illustration>
+
+    <para style="P3">Análisis del tipo de la costa</para>
+    <blockTable repeatRows="1" style="datetable" colWidths="70,310,91" py:if="len(data_sacosta) > 0">
+        <tr>
+            <td><para style="P4"><font color="white">Código</font></para></td>
+            <td><para style="P4"><font color="white">Descripción tipo de costa</font></para></td>
+            <td><para style="P4" alignment="right"><font color="white">Longitud</font></para></td>
+        </tr>
+        <tr py:for="row in data_sacosta" >
+            <td><para><font color="${get_esicostes_color(row['esicostes'])}">&#x25A0;</font> ${row['esicostes']}</para></td>
+            <td><para style="font11">${get_esicostes_description(row['esicostes'])}</para></td>
+            <td>${format_longitud(row['longitud'], units_longitud)}</td>
+        </tr>
+    </blockTable>
+    <para py:if="len(data_sacosta) == 0">La región seleccionada no interseca con la línea de costa.</para>
+
+    <spacer length="1cm"/>
+
+    <condPageBreak height="400"/>
+    <para style="P3" py:if="len(data_sacosta) > 0">Fotografías</para>
+    <keepTogether py:for="row in data_sacosta">
+        <para style="P4">${''.join([row['esicostes'], ' - ', get_esicostes_description(row['esicostes'])])}</para>
+        <blockTable colWidths="220,220" spaceBefore="0" spaceAfter="10" py:if="len(row['hotlink']) > 0">
+            <tr>
+                <td py:for="i in range(min([2, len(row['hotlink'])]))">
+                    <illustration align="CENTER" height="156" width="190" borderStrokeWidth="1">
+                        <image file="http://gis.socib.es/images${row['hotlink'][i]}" width="190" height="156" showBoundary="yes" preserveAspectRatio="yes" x="0" y="0" />
+                    </illustration>
+                </td>
+            </tr>
+        </blockTable>
+        <para py:if="len(row['hotlink']) == 0">No hay ninguna fotografía de este tipo de costa en esta región</para>
+    </keepTogether>
+  </story>
+</document>

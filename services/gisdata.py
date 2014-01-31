@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 
-from flask import jsonify
 import psycopg2
 from psycopg2.extras import DictCursor
 
@@ -44,7 +43,7 @@ def get_data_sacosta(config, region):
 
         result.append(obj)
 
-    return jsonify({'data': result})
+    return result
 
 
 def get_data_proteccion(config, region):
@@ -108,7 +107,7 @@ def get_data_proteccion(config, region):
             obj_ambito['num'] += row['num_features']
             obj_ambito['area'] += row['area_intersec']
 
-    return jsonify({'data': results})
+    return results
 
 
 
@@ -130,4 +129,4 @@ def get_data_usohumano(config, region):
     for row in cur:
         result.append(row)
 
-    return jsonify({'data': result})
+    return result

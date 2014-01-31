@@ -46,10 +46,18 @@ class Config(object):
     # ex: BLUEPRINTS = [('blog.app', {'url_prefix': '/myblog'})]  # where app is a Blueprint instance
     BLUEPRINTS = ['services.app']
 
+    # Map layers. Ordered from bottom layer to top layer
+    MAP_LAYERS = {
+        'proteccion': ['ge:bal_municipios', 'batimetria', 'sa:mca_protection_test' ],
+        'sacosta': ['ge:bal_municipios', 'batimetria', 'sa:bal_sa_costa_2012' ]
+    }
+
 
 class Dev(Config):
     DEBUG = True
     MAIL_DEBUG = True
+    LOGGER_NAME = "log/%s_log" % project_name
+    LOG_FILENAME = "log/%s.log" % project_name
 
 
 class Testing(Config):
