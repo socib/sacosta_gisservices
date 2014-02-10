@@ -21,11 +21,18 @@ Installation
 
     Modify activate_this variable, in order to set the path of the virtualenv
 
+- Install system requirements::
+
+    aptitude install python2.7-dev libpq-dev libxml2-dev libxslt1-dev
+    aptitude install libjpeg libjpeg-dev libfreetype6 libfreetype6-dev zlib1g-dev
+
+
 - Install python dependencies::
 
     (virtualenv_name) $ pip install -r requirements/prod.txt
 
 - Configure new virtualhost in apache::
+
 
     <VirtualHost *:80>
 
@@ -34,21 +41,97 @@ Installation
             ServerName gisservices.socib.es
             ServerAlias *.gisservices.socib.es
 
-            WSGIScriptAlias / /var/www/gisservices/wsgi.py
+
+            ProxyPreserveHost On
+            <Proxy *>
+                Order deny,allow
+                Allow from all
+            </Proxy>
+
+            # Serve static
+            ProxyPass /favicon.ico !
+            ProxyPass /static/ !
+            ProxyPass /resources/ !
+
+            # proxy a la resta
+            ProxyPass / http://localhost:49154/
+            ProxyPassReverse / http://localhost:49154/
+
+            Alias /static/ /var/www/gisservices/static/
+            Alias /resources/ /var/www/gisservices/resources/
 
             <Directory "/var/www/gisservices">
                     Options Indexes FollowSymLinks MultiViews
                     Allow from all
             </Directory>
 
-            ErrorLog /var/log/apache2/gisservices.socib.es.error.log
+            ErrorLog /var/log/apache2/gisservicestest.socib.es.error.log
+            # Possible values include: debug, info, notice, warn, error, crit,
+            # alert, emerg.
             LogLevel info
 
-            CustomLog /var/log/apache2/gisservices.socib.es.access.log combined
+            CustomLog /var/log/apache2/gisservicestest.socib.es.access.log combined
             ServerSignature On
 
     </VirtualHost>
 
+- Create symbolic link at www/gisservices::
+
+    ln -s /home/gisadmin/python/apps/gisservices/ /var/www/gisservices
+
+- Gunicorn::
+
+    1. Install gunicorn::
+
+        pip install gunicorn
+
+    2. Install supervisor with apt-get or aptitude (before, aptitude install python-meld3 && pip install meld3==0.6.7)
+
+    3. Prepare gunicorn log folder. Create /var/log/gunicorn and change owner to www-data
+
+    4. Configure supervisor in order to load gunicorn servir with OS. File /etc/supervisor/conf.d/gunicorn-seaboard.conf::
+
+        [program:gunicorn-gisservices]
+        command=/usr/local/bin/gunicorn -c /var/www/gisservices/gunicorn_conf.py wsgi_gisserver:application
+        directory=/var/www/gisservices
+        user=www-data
+        autostart=true
+        autorestart=true
+        priority=991
+        stopsignal=KILL
+
+        stdout_logfile=/var/log/gunicorn/gisservices.log
+        stdout_logfile_maxbytes=1MB
+        stdout_logfile_backups=2
+        stderr_logfile=/var/log/gunicorn/gisservices.error.log
+        stderr_logfile_maxbytes=1MB
+        stderr_logfile_backups=2
+
+
+
+    5. Run supervisor (reload with new config):
+        service supervisor stop
+        unlink /var/run//supervisor.sock
+        service supervisor start
+
+    6. Enable proxy_http module in apache2::
+
+        a2enmod proxy_http
+
+
+- Gunicorn notes::
+
+    1. Show gunicorn processes::
+
+        ps aux | grep gunicorn
+
+    2. Reload gunicorn processes::
+
+        supervisorctl pid gunicorn-gisservices | xargs kill -HUP
+
+        Or::
+
+        supervisorctl restart gunicorn-gisservices
 
 Development deployment
 ----------------------

@@ -17,7 +17,8 @@ class Config(object):
     USE_X_SENDFILE = False
 
     # DATABASE CONFIGURATION
-    # Defined at local_config.py (not in git repository. local_config is called by GISSERVICES_CONFIG envvar)
+    # Defined at local_config.py
+    # (not in git repository. local_config is called by GISSERVICES_CONFIG envvar)
     DATABASE_URI = "dbname=DBNAME host=HOST port=PORT user=USER password=PASSWORD"
 
     CSRF_ENABLED = True
@@ -27,7 +28,7 @@ class Config(object):
     LOGGER_NAME = "/tmp/%s_log" % project_name
     LOG_FILENAME = "/tmp/%s.log" % project_name
     LOG_LEVEL = logging.INFO
-    LOG_FORMAT = "%(asctime)s %(levelname)s\t: %(message)s" # used by logging.Formatter
+    LOG_FORMAT = "%(asctime)s %(levelname)s\t: %(message)s"  # used by logging.Formatter
 
     PERMANENT_SESSION_LIFETIME = timedelta(days=1)
 
@@ -43,14 +44,17 @@ class Config(object):
 
     # see example/ for reference
     # ex: BLUEPRINTS = ['blog.app']  # where app is a Blueprint instance
-    # ex: BLUEPRINTS = [('blog.app', {'url_prefix': '/myblog'})]  # where app is a Blueprint instance
+    # ex: BLUEPRINTS = [('blog.app', {'url_prefix': '/myblog'})]
+    # where app is a Blueprint instance
     BLUEPRINTS = ['services.app']
 
     # Map layers. Ordered from bottom layer to top layer
     MAP_LAYERS = {
-        'proteccion': ['ge:bal_municipios', 'batimetria', 'sa:mca_protection_test' ],
-        'sacosta': ['ge:bal_municipios', 'batimetria', 'sa:bal_sa_costa_2012' ]
+        'proteccion': ['ge:bal_municipios', 'batimetria', 'sa:mca_protection_test'],
+        'sacosta': ['ge:bal_municipios', 'batimetria', 'sa:bal_sa_costa_2012']
     }
+    # Defined at local_config.py
+    SENTRY_DSN = ''
 
 
 class Dev(Config):
@@ -63,4 +67,3 @@ class Dev(Config):
 class Testing(Config):
     TESTING = True
     CSRF_ENABLED = False
-
