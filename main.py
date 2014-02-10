@@ -2,6 +2,7 @@
 
 import logging
 from flask import Flask, render_template
+from raven.contrib.flask import Sentry
 
 
 def __import_blueprint(blueprint_str):
@@ -34,6 +35,7 @@ def app_factory(config, app_name=None, blueprints=None):
     configure_extensions(app)
     configure_before_request(app)
     configure_views(app)
+    Sentry(app)
 
     return app
 
@@ -89,7 +91,6 @@ def configure_error_handlers(app):
         """
         return render_template("access_forbidden.html"), 403
 
-
     @app.errorhandler(404)
     def page_not_found(error):
         """
@@ -103,7 +104,6 @@ def configure_error_handlers(app):
         """
         return render_template("page_not_found.html"), 404
 
-
     @app.errorhandler(405)
     def method_not_allowed_page(error):
         """
@@ -112,7 +112,6 @@ def configure_error_handlers(app):
         containing a list of valid methods for the requested resource.
         """
         return render_template("method_not_allowed.html"), 405
-
 
     @app.errorhandler(500)
     def server_error_page(error):

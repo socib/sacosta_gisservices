@@ -79,7 +79,7 @@
             <td>${format_longitud(row['longitud'], units_longitud)}</td>
         </tr>
     </blockTable>
-    <para py:if="len(data_sacosta) == 0">La región seleccionada no interseca con la línea de costa.</para>
+    <para py:if="len(data_sacosta) == 0">La región seleccionada no intersecta con la línea de costa.</para>
 
     <spacer length="1cm"/>
 
