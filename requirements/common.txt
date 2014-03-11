@@ -27,3 +27,4 @@ pyPdf==1.13
 unidecode
 raven
 blinker
+shapely

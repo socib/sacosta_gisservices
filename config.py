@@ -50,8 +50,18 @@ class Config(object):
 
     # Map layers. Ordered from bottom layer to top layer
     MAP_LAYERS = {
-        'proteccion': ['ge:bal_municipios', 'batimetria', 'sa:mca_protection_test'],
-        'sacosta': ['ge:bal_municipios', 'batimetria', 'sa:bal_sa_costa_2012']
+        'proteccion': [
+            'ge:bal_municipios',
+            'batimetria',
+            'ideib:batimetria20M',
+            'ideib:toponimia100M',
+            'sa:mca_protection_test'],
+        'sacosta': [
+            'ge:bal_municipios',
+            'batimetria',
+            'ideib:batimetria20M',
+            'ideib:toponimia100M',
+            'sa:bal_sa_costa_2012']
     }
     # Defined at local_config.py
     SENTRY_DSN = ''

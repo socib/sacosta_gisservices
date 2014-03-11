@@ -5,31 +5,35 @@ from psycopg2.extras import DictCursor
 
 
 def get_data_sacosta(config, region):
-    conn = psycopg2.connect(config['DATABASE_URI'])
-    cur = conn.cursor(cursor_factory=DictCursor)
+    """ Get aggregated data of coastline sensibility for a given region
 
-    # geojson = "string_agg(ST_AsGeoJSON(st_transform(st_force_2d(sci.the_geom_intersec), 900913)), '|')"
-
-    strSql = """
+    :param config: app config
+    :param region: string that defines a SQL/MM instruction to define
+                   the geometry of the selected region
+                   (ST_GeomFromText, ST_MakeEnvelope...)
+    :returns: array with the result of longitude and images for each type of coast
+    """
+    sql_sacosta = """
     SELECT sci."ESICOSTES", count(1) as num_features, sum("LONGITUD") as longitud,
     sum(st_length(the_geom_intersec)) as longitud_intersec,
     string_agg(sci."HOTLINK", '|') as hotlink
     FROM (
         SELECT sc.*,
         ST_Intersection(
-            ST_Transform(%s, 3043),
+            ST_Transform({region}, 3043),
             the_geom) as the_geom_intersec
         FROM sacosta.bal_sa_costa_2012 as sc
         WHERE ST_Intersects(
-            ST_Transform(%s, 3043),
+            ST_Transform({region}, 3043),
             the_geom)
     ) AS sci
     GROUP BY "ESICOSTES"
     ORDER BY "ESICOSTES"
-    """ % (region, region)
+    """.format(region=region)
 
-    cur.execute(strSql)
-
+    conn = psycopg2.connect(config['DATABASE_URI'])
+    cur = conn.cursor(cursor_factory=DictCursor)
+    cur.execute(sql_sacosta)
     # Process the result
     result = []
     for row in cur:
@@ -40,35 +44,39 @@ def get_data_sacosta(config, region):
         }
         if row['hotlink'] is not None:
             obj['hotlink'] = [link for link in row['hotlink'].split('|')]
-
         result.append(obj)
-
     return result
 
 
 def get_data_proteccion(config, region):
-    conn = psycopg2.connect(config['DATABASE_URI'])
-    cur = conn.cursor(cursor_factory=DictCursor)
+    """ Get aggregated data of protection types of a given region
 
-    # geojson = "string_agg(ST_AsGeoJSON(st_transform(st_force_2d(gpci.the_geom_intersec), 900913)), '|')"
-
-    strSql = """
-    SELECT gpci.proteccion, gpci.ambito, count(1) as num_features, string_agg(gpci.toponimia, '|') as toponimia,
+    :param config: app config
+    :param region: string that defines a SQL/MM instruction to define
+                   the geometry of the selected region
+                   (ST_GeomFromText, ST_MakeEnvelope...)
+    :returns: array with data for each type of protection
+    """
+    sql_proteccion = """
+    SELECT gpci.proteccion, gpci.ambito, count(1) as num_features,
+    string_agg(gpci.toponimia, '|') as toponimia,
     sum(st_area(gpci.the_geom_intersec)) as area_intersec
     from (
         select gpc.*,
             ST_Intersection(
-                ST_Transform(%s, 3043),
+                ST_Transform({region}, 3043),
                 the_geom) as the_geom_intersec
         from sacosta.mca_protection_test gpc
         WHERE ST_isvalid(the_geom) AND ST_Intersects(
-            ST_Transform(%s, 3043),
+            ST_Transform({region}, 3043),
             the_geom)
     ) AS gpci
     GROUP BY proteccion, ambito
-    """ % (region, region)
+    """.format(region=region)
 
-    cur.execute(strSql)
+    conn = psycopg2.connect(config['DATABASE_URI'])
+    cur = conn.cursor(cursor_factory=DictCursor)
+    cur.execute(sql_proteccion)
     # Process the result
     results = {}
     for row in cur:
@@ -110,20 +118,19 @@ def get_data_proteccion(config, region):
     return results
 
 
-
 def get_data_usohumano(config, region):
-    conn = psycopg2.connect(config['DATABASE_URI'])
-    cur = conn.cursor(cursor_factory=DictCursor)
 
-    strSql = """
+    sql_usohumano = """
     select uh.*
     from sacosta.bal_uso_humano uh
     WHERE ST_Intersects(
-        ST_Transform(%s, 3043),
+        ST_Transform({region}, 3043),
         the_geom)
-    """ % (region)
+    """.format(region=region)
 
-    cur.execute(strSql)
+    conn = psycopg2.connect(config['DATABASE_URI'])
+    cur = conn.cursor(cursor_factory=DictCursor)
+    cur.execute(sql_usohumano)
     # Process the result
     result = []
     for row in cur:

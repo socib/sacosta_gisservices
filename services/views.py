@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from flask import Blueprint, jsonify, current_app, abort, send_file
+from flask import Blueprint, jsonify, current_app, abort, send_file, request
 from decorators.crossdomain import crossdomain
 
 import utils
@@ -19,30 +19,40 @@ def get_sacosta_bbox(xmin, ymin, xmax, ymax):
 
 
 @app.route('/api/v1.0/sacosta/<polygon>', methods=['GET'])
+@app.route('/api/v1.0/sacosta/', methods=['POST'])
 @crossdomain(origin='*')
-def get_sacosta_polygon(polygon):
+def get_sacosta_polygon(polygon=None):
+    if request.method == 'POST':
+        polygon = request.form['polygon']
+
     try:
-        region = utils.get_makepolygon_from_string(polygon)
+        region = utils.get_geometry_from_text(polygon)
     except ValueError, e:
         return jsonify({'error': str(e)})
     return utils.send_json_data(gisdata.get_data_sacosta(current_app.config, region))
 
 
 @app.route('/api/v1.0/proteccion/<polygon>', methods=['GET'])
+@app.route('/api/v1.0/proteccion/', methods=['POST'])
 @crossdomain(origin='*')
-def get_proteccion_polygon(polygon):
+def get_proteccion_polygon(polygon=None):
+    if request.method == 'POST':
+        polygon = request.form['polygon']
     try:
-        region = utils.get_makepolygon_from_string(polygon)
+        region = utils.get_geometry_from_text(polygon)
     except ValueError, e:
         return jsonify({'error': str(e)})
     return utils.send_json_data(gisdata.get_data_proteccion(current_app.config, region))
 
 
 @app.route('/api/v1.0/uso-humano/<polygon>', methods=['GET'])
+@app.route('/api/v1.0/uso-humano/', methods=['POST'])
 @crossdomain(origin='*')
-def get_usohumano_polygon(polygon):
+def get_usohumano_polygon(polygon=None):
+    if request.method == 'POST':
+        polygon = request.form['polygon']
     try:
-        region = utils.get_makepolygon_from_string(polygon)
+        region = utils.get_geometry_from_text(polygon)
     except ValueError, e:
         return jsonify({'error': e})
     return utils.send_json_data(gisdata.get_data_usohumano(current_app.config, region))
@@ -52,7 +62,7 @@ def get_usohumano_polygon(polygon):
 @crossdomain(origin='*')
 def sacosta_map_tile(polygon, size_x, size_y):
     try:
-        vertices = utils.get_polygon_vertices_from_string(polygon)
+        vertices = utils.get_polygon_vertices_from_text(polygon)
     except ValueError:
         abort(404)
 
@@ -65,7 +75,7 @@ def sacosta_map_tile(polygon, size_x, size_y):
 @crossdomain(origin='*')
 def proteccion_map_tile(polygon, size_x, size_y):
     try:
-        vertices = utils.get_polygon_vertices_from_string(polygon)
+        vertices = utils.get_polygon_vertices_from_text(polygon)
     except ValueError:
         abort(404)
 
