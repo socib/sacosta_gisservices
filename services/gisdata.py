@@ -4,15 +4,16 @@ import psycopg2
 from psycopg2.extras import DictCursor
 
 
-def get_data_sacosta(config, region):
+def get_data_sacosta(config, polygon):
     """ Get aggregated data of coastline sensibility for a given region
 
     :param config: app config
-    :param region: string that defines a SQL/MM instruction to define
-                   the geometry of the selected region
-                   (ST_GeomFromText, ST_MakeEnvelope...)
+    :param polygon: shapely polygon
     :returns: array with the result of longitude and images for each type of coast
     """
+
+    region = "ST_GeomFromText('{polygon_text}', 4326)".format(polygon_text=polygon.wkt)
+
     sql_sacosta = """
     SELECT sci."ESICOSTES", count(1) as num_features, sum("LONGITUD") as longitud,
     sum(st_length(the_geom_intersec)) as longitud_intersec,
@@ -48,15 +49,15 @@ def get_data_sacosta(config, region):
     return result
 
 
-def get_data_proteccion(config, region):
+def get_data_proteccion(config, polygon):
     """ Get aggregated data of protection types of a given region
 
     :param config: app config
-    :param region: string that defines a SQL/MM instruction to define
-                   the geometry of the selected region
-                   (ST_GeomFromText, ST_MakeEnvelope...)
+    :param polygon: shapely polygon
     :returns: array with data for each type of protection
     """
+    region = "ST_GeomFromText('{polygon_text}', 4326)".format(polygon_text=polygon.wkt)
+
     sql_proteccion = """
     SELECT gpci.proteccion, gpci.ambito, count(1) as num_features,
     string_agg(gpci.toponimia, '|') as toponimia,
@@ -118,7 +119,14 @@ def get_data_proteccion(config, region):
     return results
 
 
-def get_data_usohumano(config, region):
+def get_data_usohumano(config, polygon):
+    """ Get aggregated data of uso humano for a given region
+
+    :param config: app config
+    :param polygon: shapely polygon
+    :returns: array with data for each type of protection
+    """
+    region = "ST_GeomFromText('{polygon_text}', 4326)".format(polygon_text=polygon.wkt)
 
     sql_usohumano = """
     select uh.*

@@ -2,7 +2,6 @@
 
 from pyjon.reports import ReportFactory
 import tempfile
-import utils
 import maputils
 import gisdata
 
@@ -11,25 +10,21 @@ def generate_sacosta_report(config, polygon):
     """ Generate a pdf from sacosta data
 
     :param config: app config
-    :param polygon: string with a list of floats separated by commas that represents
-                    polygon vertexs
+    :param polygon: shapely polygon
     :returns: temporary file
     """
 
     template = 'templates/pdf_template_sacosta.xml'
 
     # generate image
-    vertices = utils.get_polygon_vertices_from_text(polygon)
     layers = config['MAP_LAYERS']['sacosta']
     img = maputils.generate_map_with_selected_polygon(layers,
-                                                      vertices,
+                                                      polygon,
                                                       max_size=(400, 300))
     img_tf = tempfile.NamedTemporaryFile(suffix='.png')
     img.save(img_tf)
 
-    # get regionrep
-    region = utils.get_geometry_from_text(polygon)
-    data_sacosta = gisdata.get_data_sacosta(config, region)
+    data_sacosta = gisdata.get_data_sacosta(config, polygon)
 
     units = 'm'
     if data_sacosta:
@@ -57,18 +52,16 @@ def generate_proteccion_report(config, polygon):
     """ Generate a pdf from grados de proteccion data
 
     :param config: app config
-    :param polygon: string with a list of floats separated by commas that represents
-                    polygon vertexs
+    :param polygon: shapely polygon
     :returns: temporary file
     """
 
     template = 'templates/pdf_template_proteccion.xml'
 
     # generate image
-    vertices = utils.get_polygon_vertices_from_text(polygon)
     layers = config['MAP_LAYERS']['proteccion']
     img = maputils.generate_map_with_selected_polygon(layers,
-                                                      vertices,
+                                                      polygon,
                                                       max_size=(400, 300))
     img_tf = tempfile.NamedTemporaryFile(suffix='.png')
     img.save(img_tf)
@@ -78,9 +71,7 @@ def generate_proteccion_report(config, polygon):
     img_proteccion_legend_tf = tempfile.NamedTemporaryFile(suffix='.png')
     img_proteccion_legend.save(img_proteccion_legend_tf)
 
-    # get regionrep
-    region = utils.get_geometry_from_text(polygon)
-    data = gisdata.get_data_proteccion(config, region)
+    data = gisdata.get_data_proteccion(config, polygon)
 
     factory = ReportFactory()
 

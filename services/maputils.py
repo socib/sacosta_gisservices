@@ -91,21 +91,25 @@ def generate_map_tile(layers, bbox, max_size=(500, 500)):
     return image
 
 
-def generate_map_with_selected_polygon(layers, polygon_vertices, max_size=(500, 500),
-                                       bbox_padding=0.01):
+def generate_map_with_selected_polygon(layers, polygon, max_size=(500, 500),
+                                       bbox_padding=0.1):
     """ Generate a map image with given layers and a selected polygon
 
     :param layers: layer list, ordered from bottom to top
-    :param polygon_vertices: list
+    :param polygon: shapely polygon
     :param max_size: desired dimensions for the image.
                      These dimensions are adjusted to preserve map proportion
-    :param bbox_padding: extra space that the background image will take from polygon bbox
+    :param bbox_padding: extra space that the background image will take from polygon bbox.
+                         Expressed in parts per unit of polygon bbox dimensions
     :returns: PIL image
     """
-    bbox = (min([float(v[0]) for v in polygon_vertices]) - bbox_padding,
-            min([float(v[1]) for v in polygon_vertices]) - bbox_padding,
-            max([float(v[0]) for v in polygon_vertices]) + bbox_padding,
-            max([float(v[1]) for v in polygon_vertices]) + bbox_padding)
+    bounds = polygon.bounds
+    # padding relative to bbox dimensions (average of height and width)
+    padding = ((bounds[2] + bounds[3] - bounds[0] - bounds[1]) / 2) * bbox_padding
+    bbox = (bounds[0] - padding,
+            bounds[1] - padding,
+            bounds[2] + padding,
+            bounds[3] + padding)
 
     background = generate_map_tile(layers, bbox, max_size)
 
@@ -113,7 +117,7 @@ def generate_map_with_selected_polygon(layers, polygon_vertices, max_size=(500, 
     conv = coordinates_to_image_position(bbox, background.size)
     poly = Image.new('RGBA', background.size)
     pdraw = ImageDraw.Draw(poly)
-    pdraw.polygon([conv(float(v[0]), float(v[1])) for v in polygon_vertices],
+    pdraw.polygon([conv(float(v[0]), float(v[1])) for v in polygon.exterior.coords],
                   fill=(0, 0, 0, 127), outline=(0, 0, 0, 255))
 
     # combine with image

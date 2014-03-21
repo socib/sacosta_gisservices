@@ -7,44 +7,43 @@ from shapely import wkt
 from shapely.geometry import Polygon
 
 
-def get_polygon_vertices_from_text(polygon):
-    """ Get list of vertexs from comma separated values
+def create_polygon(polygon_text):
+    """ Get a shapely Polygon from text
 
     :param polygon: string with a list of floats separated by commas that represents
+                    polygon vertexs or a WKT representing a polygon
+    :returns: Polygon
+    """
+    if polygon_text.startswith('POLYGON'):
+        try:
+            # Check polygon is a valid wkt
+            polygon = wkt.loads(polygon_text)
+        except:
+            raise ValueError('Could not create geometry')
+    else:
+        # get polygon WKT from a list of vertices
+        vertices = get_polygon_vertices_from_text(polygon_text)
+        polygon = Polygon(vertices)
+
+    return polygon
+
+
+def get_polygon_vertices_from_text(polygon_text):
+    """ Get list of vertexs from comma separated values
+
+    :param polygon_text: string with a list of floats separated by commas that represents
                     polygon vertexs
     :returns: list of vertexs
     """
     # Security check. All elements in polygon must be floats
     try:
-        list_coord = [float(coord) for coord in polygon.split(',')]
+        list_coord = [float(coord) for coord in polygon_text.split(',')]
     except ValueError:
         raise ValueError(
             'You must specify a polygon with a list of floats representing its vertices (comma separated)')
 
     vertices = zip(*[list_coord[i::2] for i in range(2)])
     return vertices
-
-
-def get_geometry_from_text(polygon):
-    """ Get ST_GeomFromText PostGIS SQL statement from a polygon
-
-    :param polygon: string with a list of floats separated by commas that represents
-                    polygon vertexs or a WKT representing a polygon
-    :returns: string
-    """
-    if polygon.startswith('POLYGON'):
-        try:
-            # Check polygon is a valid wkt
-            polygon_text = wkt.loads(polygon).wkt
-        except:
-            raise ValueError('Could not create geometry')
-    else:
-        # get polygon WKT from a list of vertices
-        vertices = get_polygon_vertices_from_text(polygon)
-        polygon_text = Polygon(vertices).wkt
-
-    region = "ST_GeomFromText('%s', 4326)" % polygon_text
-    return region
 
 
 def serve_pil_image(pil_img):
