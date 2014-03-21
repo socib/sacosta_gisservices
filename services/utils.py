@@ -3,48 +3,47 @@
 from flask import send_file
 from flask import jsonify
 import StringIO
+from shapely import wkt
+from shapely.geometry import Polygon
 
 
-def get_polygon_vertices_from_string(polygon):
+def create_polygon(polygon_text):
+    """ Get a shapely Polygon from text
+
+    :param polygon: string with a list of floats separated by commas that represents
+                    polygon vertexs or a WKT representing a polygon
+    :returns: Polygon
+    """
+    if polygon_text.startswith('POLYGON'):
+        try:
+            # Check polygon is a valid wkt
+            polygon = wkt.loads(polygon_text)
+        except:
+            raise ValueError('Could not create geometry')
+    else:
+        # get polygon WKT from a list of vertices
+        vertices = get_polygon_vertices_from_text(polygon_text)
+        polygon = Polygon(vertices)
+
+    return polygon
+
+
+def get_polygon_vertices_from_text(polygon_text):
     """ Get list of vertexs from comma separated values
 
-    :param polygon: string with a list of floats separated by commas that represents polygon vertexs
+    :param polygon_text: string with a list of floats separated by commas that represents
+                    polygon vertexs
     :returns: list of vertexs
     """
-    polygon = polygon.split(',')
-
     # Security check. All elements in polygon must be floats
-    for coord in polygon:
-        try:
-            float(coord)
-        except ValueError:
-            raise ValueError(
-                'You must specify a polygon with a list of floats representing its vertices (comma separated)')
+    try:
+        list_coord = [float(coord) for coord in polygon_text.split(',')]
+    except ValueError:
+        raise ValueError(
+            'You must specify a polygon with a list of floats representing its vertices (comma separated)')
 
-    vertices = zip(*[polygon[i::2] for i in range(2)])
+    vertices = zip(*[list_coord[i::2] for i in range(2)])
     return vertices
-
-
-def get_makepolygon_from_string(polygon):
-    """ Get ST_MakePolygon PostGIS SQL statement from a polygon
-
-    :param polygon: string with a list of floats separated by commas that represents polygon vertexs
-    :returns: string
-    """
-    vertices = get_polygon_vertices_from_string(polygon)
-
-    # close the polygon
-    if vertices[0] != vertices[-1]:
-        vertices.append(vertices[0])
-
-    polygon_text = 'LINESTRING('
-    for vertex in vertices:
-        polygon_text += vertex[0] + ' ' + vertex[1] + ' 1, '
-
-    polygon_text = polygon_text[:-2] + ')'
-    region = "ST_MakePolygon(ST_GeomFromText('%s',4326))" % polygon_text
-
-    return region
 
 
 def serve_pil_image(pil_img):
@@ -127,12 +126,12 @@ ESICOSTES = {
 }
 
 
-
 def get_esicostes_description(esicostes):
     if ESICOSTES[esicostes]:
         return ESICOSTES[esicostes]['description'].decode('utf-8')
     else:
         return ''
+
 
 def get_esicostes_color(esicostes):
     if ESICOSTES[esicostes]:
@@ -143,5 +142,5 @@ def get_esicostes_color(esicostes):
 
 def format_longitud(longitud, units='m'):
     if units == 'km':
-        return '{0:.2f} km'.format(longitud/1000)
+        return '{0:.2f} km'.format(longitud / 1000)
     return '{0:.2f} m'.format(longitud)
