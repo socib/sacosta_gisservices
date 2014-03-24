@@ -11,7 +11,7 @@ Installation
 
 - Download code to /var/www/gisservices (or make a symbolic link there)::
 
-    git clone gituser@portal.socib.es:repositories/gisservices
+    git clone https://github.com/socib/sacosta_gisservices.git
 
 - Local config::
 
