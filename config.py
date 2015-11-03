@@ -51,14 +51,17 @@ class Config(object):
     # Map layers. Ordered from bottom layer to top layer
     MAP_LAYERS = {
         'proteccion': [
+            'sa:mean_atlas_land',
             'ge:bal_municipios',
-            'batimetria',
             'ideib:batimetria20M',
             'ideib:toponimia100M',
-            'sa:mca_protection_test'],
+            'sa:mca_protection_test',
+            'sa:cab_protection_2015',
+            'sa:men_protection_2015',
+            'sa:pit_protection_2015'],
         'sacosta': [
+            'sa:mean_atlas_land',
             'ge:bal_municipios',
-            'batimetria',
             'ideib:batimetria20M',
             'ideib:toponimia100M',
             'sa:bal_sa_costa_2012']

@@ -67,7 +67,7 @@ def get_data_proteccion(config, polygon):
             ST_Intersection(
                 ST_Transform({region}, 3043),
                 the_geom) as the_geom_intersec
-        from sacosta.mca_protection_test gpc
+        from sacosta.bal_proteccion_2015 gpc
         WHERE ST_isvalid(the_geom) AND ST_Intersects(
             ST_Transform({region}, 3043),
             the_geom)
